@@ -100,19 +100,16 @@ DOCKER_RUN_FLAGS = --rm -ti $(DOCKER_ARGS)
 # builds based on the requested build.
 DOCKER_BUILD_FLAGS_CNI = --build-arg golang_image="$(GOLANG_IMAGE)" \
 					  --build-arg base_image="$(BASE_IMAGE_CNI)"	\
-					  --network=host \
 	  		          $(DOCKER_ARGS)
 # DOCKER_BUILD_FLAGS_CNI_INIT is the set of flags passed during CNI init
 # container image builds based on the requested build.
 DOCKER_BUILD_FLAGS_CNI_INIT = --build-arg golang_image="$(GOLANG_IMAGE)" \
 					  --build-arg base_image="$(BASE_IMAGE_CNI_INIT)"	\
-					  --network=host \
 	  		          $(DOCKER_ARGS)
 # DOCKER_BUILD_FLAGS_CNI_METRICS is the set of flags passed during metrics
 # container image builds based on the requested build.
 DOCKER_BUILD_FLAGS_CNI_METRICS = --build-arg golang_image="$(GOLANG_IMAGE)" \
 					  --build-arg base_image="$(BASE_IMAGE_CNI_METRICS)"	\
-					  --network=host \
 	  		          $(DOCKER_ARGS)
 
 MULTI_PLATFORM_BUILD_TARGETS = 	linux/amd64,linux/arm64
@@ -175,8 +172,8 @@ multi-arch-cni-build:
 	docker buildx build $(DOCKER_BUILD_FLAGS_CNI) \
 		-f scripts/dockerfiles/Dockerfile.release \
 		--platform "$(MULTI_PLATFORM_BUILD_TARGETS)"\
-		--cache-from=type=gha \
-		--cache-to=type=gha,mode=max \
+		--tag <snip>.dkr.ecr.us-east-1.amazonaws.com/runner:amazon-vpc-cni-k8s-umut-v1 \
+		--push \
 		.
 
 ## Build and push multi-arch VPC CNI plugin container image.
@@ -193,8 +190,8 @@ multi-arch-cni-init-build:
 	docker buildx build $(DOCKER_BUILD_FLAGS_CNI_INIT) \
 		-f scripts/dockerfiles/Dockerfile.init \
 		--platform "$(MULTI_PLATFORM_BUILD_TARGETS)"\
-		--cache-from=type=gha \
-		--cache-to=type=gha,mode=max \
+		--tag <snip>.dkr.ecr.us-east-1.amazonaws.com/runner:amazon-vpc-cni-k8s-init-umut-v1 \
+		--push \
 		.
 
 ## Build and push VPC CNI plugin Init container image.
